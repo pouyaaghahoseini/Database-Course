@@ -1,0 +1,53 @@
+CREATE DATABASE League;
+USE League;
+CREATE TABLE Team
+(
+  Team_Name VARCHAR(20) NOT NULL,
+  City VARCHAR(20) NOT NULL,
+  Coach VARCHAR(20) NOT NULL,
+  AFC_Cl VARCHAR(3) NOT NULL,
+  Points INT NOT NULL,
+  Team_ID INT NOT NULL,
+  PRIMARY KEY (Team_ID)
+);
+
+CREATE TABLE Player
+(
+  Player_Name VARCHAR(20) NOT NULL,
+  Post VARCHAR(20) NOT NULL,
+  Age INT NOT NULL,
+  Playes_National VARCHAR(3) NOT NULL,
+  Player_ID INT NOT NULL,
+  Is_Injured INT NOT NULL,
+  PRIMARY KEY (Player_ID)
+);
+
+CREATE TABLE `Match`
+(
+  MatchID INT NOT NULL,
+  Date DATE NOT NULL,
+  Guest_ID INT NOT NULL,
+  Host_ID INT NOT NULL,
+  Guest_Goals INT NOT NULL,
+  Host_Goals INT NOT NULL,
+  PRIMARY KEY (MatchID),
+  FOREIGN KEY (Guest_ID) REFERENCES Team(Team_ID),
+  FOREIGN KEY (Host_ID) REFERENCES Team(Team_ID)
+);
+
+CREATE TABLE Has
+(
+  Team_ID INT NOT NULL,
+  Player_ID INT NOT NULL,
+  FOREIGN KEY (Team_ID) REFERENCES Team(Team_ID),
+  FOREIGN KEY (Player_ID) REFERENCES Player(Player_ID)
+);
+CREATE TABLE Captain
+(
+  Team_ID INT NOT NULL,
+  Player_ID INT NOT NULL,
+  FOREIGN KEY (Team_ID) REFERENCES Team(Team_ID),
+  FOREIGN KEY (Player_ID) REFERENCES Player(Player_ID),
+  UNIQUE (Team_ID),
+  UNIQUE (Player_ID)
+);

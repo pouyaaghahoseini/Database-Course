@@ -1,0 +1,42 @@
+
+#1 Done
+SELECT Team_Name,Points FROM Team WHERE Team_Name='Perspolis' OR Team_Name='Esteghlal';
+#2 Done
+CREATE VIEW SaipaLostGames AS SELECT * FROM `Match` WHERE (Host_ID=(SELECT Team_ID FROM Team WHERE Team_Name='Saipa') AND Host_Goals<Guest_Goals) OR (Guest_ID=(SELECT Team_ID FROM Team WHERE Team_Name='Saipa') AND Guest_Goals<Host_Goals);
+SELECT MAX(ABS(Guest_Goals-Host_Goals)) FROM SaipaLostGames;
+#3 Done
+SELECT Team_Name,Points FROM Team WHERE Points=(SELECT MIN(Points) FROM Team);
+#4 Done
+SELECT Team_Name,Points FROM Team WHERE Points=(SELECT MAX(Points) FROM Team);
+#5 Done
+SELECT Coach FROM Team WHERE Points=(SELECT MAX(Points) FROM Team);
+#6 Done
+CREATE VIEW BestGame AS SELECT Host_ID,Guest_ID From `Match` WHERE (Guest_Goals+Host_Goals)=(SELECT MAX(Guest_Goals+Host_Goals) FROM `Match`);
+SELECT H.Team_Name,G.Team_Name FROM Team H , Team G WHERE (H.Team_ID,G.TEAM_ID) IN(SELECT Host_ID,Guest_ID FROM BestGame);
+#7 Surakhe League !
+CREATE VIEW ConcededGoals AS SELECT Guest_ID AS TeamID ,Host_Goals AS Conceded FROM `Match` UNION ALL SELECT Host_ID AS TeamID,Guest_Goals AS Conceded FROM `Match`;
+CREATE VIEW V AS SELECT TeamID,SUM(Conceded) AS AllConcededGoals FROM ConcededGoals GROUP BY TeamID;
+SELECT * FROM V;
+CREATE VIEW V1 AS SELECT T.Team_Name,A.AllConcededGoals FROM Team T,V A WHERE T.Team_ID=A.TeamID;
+SELECT * FROM V1 WHERE AllConcededGoals=(SELECT MAX(AllConcededGoals) FROM V1);
+#8 Best Attack
+CREATE VIEW ScoredGoals AS SELECT Guest_ID AS TeamID ,Guest_Goals AS Scored FROM `Match` UNION ALL SELECT Host_ID AS TeamID,Host_Goals AS Scored FROM `Match`;
+CREATE VIEW S AS SELECT TeamID,SUM(Scored) AS AllScoredGoals FROM ScoredGoals GROUP BY TeamID;
+SELECT * FROM S;
+CREATE VIEW S1 AS SELECT T.Team_Name,A.AllScoredGoals FROM Team T,S A WHERE T.Team_ID=A.TeamID;
+SELECT * FROM S1 WHERE AllScoredGoals=(SELECT MAX(AllScoredGoals) FROM S1);
+#9 Done
+SELECT Player_Name FROM player WHERE Player_ID IN (SELECT Player_ID FROM Captain WHERE Team_ID=(SELECT Team_ID FROM Team WHERE Team_Name='Zobahan'));
+#10 Done
+SELECT Player_Name FROM player P WHERE Is_Injured='1' AND P.Player_ID IN (SELECT Player_ID FROM Has H WHERE H.Team_ID IN (SELECT Team_ID FROM Team WHERE Team_Name='Siah-Jamegan'));
+#11 Done
+SELECT Player_Name FROM Player WHERE Player_ID IN (SELECT Player_ID FROM Has WHERE Team_ID IN (SELECT Team_ID FROM Team WHERE AFC_Cl='yes')) AND Post='Forward';
+#12 Done
+CREATE VIEW Nationals AS SELECT * FROM Player P WHERE P.Playes_National='Yes';
+SELECT Player_Name,Age FROM Nationals WHERE Age=(SELECT MIN(Age) FROM Nationals);
+#13 Done
+SELECT Player_Name FROM Player P WHERE P.Playes_National='Yes' AND P.Player_ID IN (SELECT Player_ID FROM Has WHERE Team_ID =(SELECT Team_ID FROM Team WHERE Team_Name='Sepidrood'));
+#14 Done
+SELECT Player_Name FROM Player WHERE Player_ID IN (SELECT Player_ID FROM Captain);
+#15 Done
+SELECT Team_Name FROM Team WHERE City='Tehran' AND AFC_Cl='Yes';
